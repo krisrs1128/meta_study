@@ -8,7 +8,6 @@ from torch.utils.data import Dataset
 import glob
 import pandas as pd
 import os.path
-import os.path
 
 class LCMPatches(Dataset):
     """
@@ -65,10 +64,10 @@ class LCMPatches(Dataset):
             cur_meta = self.metadata.loc[self.metadata["sampler_id"].isin(self.cur_ids), :]
             self.patches = {
                 row["sampler_id"]:
-                np.load(os.path.join(path, row["patch_fn"]))
+                np.load(os.path.join(self.path, row["patch_fn"]))
                 for _, row in cur_meta.iterrows()
             }
 
         # split patch into x, y_naip, y_high_res
-        patch = self.patches[ix].squeeze().transpose()
+        patch = torch.Tensor(self.patches[ix].squeeze().transpose())
         return patch[:, :, :3], patch[:, :, 4], patch[:, :, 5]
